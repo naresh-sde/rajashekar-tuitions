@@ -83,6 +83,6 @@
     <text x="620" y="404">∑</text>
     <text x="90" y="150" font-size="26">√</text>
     <text x="626" y="150" font-size="30" fill="#f59e0b">θ</text>
-    <text x="20" y="440" font-size="28" fill="#10b981">F = ma</text>
+    <text x="20" y="440" font-size="28" fill="#10b981">a² + b² = c²</text>
   </g>
 </svg>

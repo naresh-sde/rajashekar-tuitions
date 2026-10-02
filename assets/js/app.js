@@ -59,7 +59,6 @@
     brandName: "brand.name",
     areaLine: "brand.areaLine",
     phonePrimaryDisplay: "contact.phonePrimaryDisplay",
-    phoneAltDisplay: "contact.phoneAltDisplay",
     email: "contact.email",
     tutorName: "tutor.name",
     tutorRole: "tutor.role",
@@ -79,10 +78,9 @@
       if (val != null && val !== "") el.innerHTML = esc(val);
     });
 
-    var p = CFG.contact.phonePrimary, pa = CFG.contact.phoneAlt;
+    var p = CFG.contact.phonePrimary;
     $$('a[href^="tel:"]').forEach(function (a) {
-      var t = a.getAttribute("data-tel") || (a.getAttribute("href").indexOf(String(pa).slice(-10)) > -1 ? pa : p);
-      a.setAttribute("href", telHref(t));
+      a.setAttribute("href", telHref(a.getAttribute("data-tel") || p));
     });
     $$("[data-wa]").forEach(function (a) {
       a.setAttribute("href", waLink(a.getAttribute("data-wa")));
@@ -150,22 +148,108 @@
   /* ---------------- 4. renderers ---------------- */
   function renderMarquee() {
     var items = [
-      "Mathematics &amp; Physics speciality", "Classes 6 to 10", "CBSE · ICSE · State Board",
-      "Free demo class", "Batch of max 12", "Home tuition across Hyderabad",
-      "Weekly tests", "Monthly parent report", "Live online classes", "Live doubt clearing on WhatsApp"
+      "Mathematics only", "Classes 6 to 10", "CBSE · ICSE",
+      "Free demo class", "Batch of max 12", "Based in Pragathinagar",
+      "Home tuition within 10–15 km", "Class-wise syllabus tracker", "Weekly tests", "Mon–Fri 6–10 PM · Sat–Sun 10 AM–10 PM"
     ];
     var html = items.map(function (t) { return "<span>" + icon("check") + t + "</span>"; }).join("");
     $("#marquee").innerHTML = html + html;
   }
 
   function renderFormulaLab() {
-    ["maths", "physics"].forEach(function (k) {
-      var data = CFG.formulaLab[k];
-      var target = k === "maths" ? $("#flMaths") : $("#flPhysics");
-      target.innerHTML = data.items.map(function (f) {
-        return '<div class="fcard"><b>' + esc(f.n) + "</b><code>" + esc(f.f) + "</code><span>" + esc(f.w) + "</span></div>";
-      }).join("");
+    var data = CFG.formulaLab.maths;
+    $("#flMaths").innerHTML = data.items.map(function (f) {
+      return '<div class="fcard"><b>' + esc(f.n) + "</b><code>" + esc(f.f) + "</code><span>" + esc(f.w) + "</span></div>";
+    }).join("");
+  }
+
+  /* ---------------- class-wise syllabus with covered tracking ---------------- */
+  var DONE = "srt_syllabus_done_v1";
+  function doneSet() {
+    try { return JSON.parse(localStorage.getItem(DONE) || "[]"); } catch (e) { return []; }
+  }
+  function saveDone(list) { try { localStorage.setItem(DONE, JSON.stringify(list)); } catch (e) {} }
+
+  function renderSyllabus() {
+    var done = doneSet();
+    $("#syllabusNote").textContent = CFG.syllabus.note;
+    $("#syllabusFoot").textContent = CFG.syllabus.footnote;
+
+    $("#syllabusPanels").innerHTML = CFG.syllabus.classes.map(function (g, i) {
+      function col(board, list) {
+        var items = list.map(function (name, j) {
+          var key = g.cls + "-" + board + "-" + j;
+          var on = done.indexOf(key) > -1;
+          return '<label class="chap' + (on ? " done" : "") + '" data-key="' + key + '" data-name="' + esc(name.toLowerCase()) + '">' +
+            '<input type="checkbox" data-syll-key="' + key + '"' + (on ? " checked" : "") + ">" +
+            "<span>" + esc(name) + "</span></label>";
+        }).join("");
+        return '<div class="syll-col"><h4>' + (board === "cbse" ? "CBSE" : "ICSE") + ' · <span data-syll-count="' +
+          g.cls + "-" + board + '">0</span> chapters</h4><div class="syll-list">' + items + "</div></div>";
+      }
+      return '<div class="tab-panel' + (i === 0 ? " active" : "") + '" id="syl-' + i + '" role="tabpanel">' +
+        '<div class="grid grid-2 syll-cols">' + col("cbse", g.cbse) + col("icse", g.icse) + "</div></div>";
+    }).join("");
+
+    $("#syllabusPanels").addEventListener("change", function (e) {
+      var box = e.target;
+      if (!box.matches || !box.matches('[data-syll-key]')) return;
+      var list = doneSet();
+      var key = box.getAttribute("data-syll-key");
+      var i = list.indexOf(key);
+      if (box.checked && i < 0) list.push(key);
+      if (!box.checked && i > -1) list.splice(i, 1);
+      saveDone(list);
+      box.closest(".chap").classList.toggle("done", box.checked);
+      updateSyllabusTotals();
     });
+
+    $("#syllabusSearch").addEventListener("input", filterSyllabus);
+    $("#syllabusReset").addEventListener("click", function () {
+      saveDone([]);
+      $$("#syllabusPanels input[data-syll-key]").forEach(function (b) { b.checked = false; b.closest(".chap").classList.remove("done"); });
+      $("#syllabusSearch").value = "";
+      filterSyllabus();
+      updateSyllabusTotals();
+      toast("Syllabus ticks cleared");
+    });
+
+    updateSyllabusTotals();
+  }
+
+  function filterSyllabus() {
+    var q = ($("#syllabusSearch").value || "").trim().toLowerCase();
+    var shown = 0;
+    $$("#syllabusPanels .chap").forEach(function (l) {
+      var hit = !q || l.getAttribute("data-name").indexOf(q) > -1;
+      l.classList.toggle("hidden-chap", !hit);
+      if (hit) shown++;
+    });
+    $("#syllabusCount").textContent = q
+      ? shown + " chapter" + (shown === 1 ? "" : "s") + ' matching "' + q + '"'
+      : "0 of 0 chapters covered";
+    if (q) return;
+    updateSyllabusTotals();
+  }
+
+  function updateSyllabusTotals() {
+    var total = 0, done = 0, list = doneSet();
+    CFG.syllabus.classes.forEach(function (g) {
+      ["cbse", "icse"].forEach(function (b) {
+        var n = g[b].length;
+        total += n;
+        var hit = 0;
+        g[b].forEach(function (_, j) { if (list.indexOf(g.cls + "-" + b + "-" + j) > -1) hit++; });
+        done += hit;
+        var el = $('[data-syll-count="' + g.cls + "-" + b + '"]');
+        if (el) el.textContent = hit + "/" + n;
+      });
+    });
+    var pct = total ? Math.round(done * 100 / total) : 0;
+    $("#syllabusPct").textContent = pct + "%";
+    if (!$("#syllabusSearch").value) {
+      $("#syllabusCount").textContent = done + " of " + total + " chapters covered";
+    }
   }
 
   function renderMethod() {
@@ -201,7 +285,23 @@
   }
 
   function renderAreas() {
-    $("#areaList").innerHTML = CFG.areas.map(function (a) { return "<li>" + esc(a) + "</li>"; }).join("");
+    var base = CFG.brand.baseArea;
+    $("#areaList").innerHTML = CFG.areas.map(function (a) {
+      return '<li data-area="' + esc(a.toLowerCase()) + '">' + esc(a) +
+        (a === base ? ' <span class="area-base">Our base</span>' : "") + "</li>";
+    }).join("");
+    $("#areaSearch").addEventListener("input", function () {
+      var q = ($("#areaSearch").value || "").trim().toLowerCase();
+      var hits = 0;
+      $$("#areaList li").forEach(function (li) {
+        var hit = !q || li.getAttribute("data-area").indexOf(q) > -1;
+        li.classList.toggle("hidden-area", !hit);
+        if (hit) hits++;
+      });
+      $("#areaNote").textContent = q
+        ? hits + " area" + (hits === 1 ? "" : "s") + ' within 10–15 km of ' + base + ' matching "' + q + '". If your area is not listed, ask — it is usually still possible.'
+        : base + " is our base — home tuition anywhere within roughly 10–15 km. Areas outside the list are usually possible too, just ask.";
+    });
   }
 
   function renderGallery() {
@@ -251,12 +351,16 @@
       e.preventDefault();
       var cls = $("#fClass").value, board = $("#fBoard").value, mode = $("#fMode").value;
       var fee = CFG.fees[mode].bands[cls] || CFG.fees[mode].bands["10"];
-      var modeName = { classroom: "classroom batch", home: "home tuition", online: "live online class" }[mode];
+      var modeName = { classroom: "in-class batch", home: "home tuition", online: "live online class" }[mode];
       var out = $("#finderResult");
       out.classList.add("show");
-      out.innerHTML = icon("check") + "Class " + cls + " · " + board + " · " + modeName +
-        " — from " + money(fee) + " per subject per month. " +
-        (mode === "classroom" ? "Next slot: 4:00 PM." : mode === "home" ? "Timings are flexible." : "Evening 7:15 PM online slot available.");
+      out.innerHTML = icon("check") + "Class " + cls + " · " + board + " · Mathematics · " + modeName +
+        " — " + money(fee) + " per month. " +
+        (mode === "classroom"
+          ? "Weekday batch between 6:00 PM and 10:00 PM."
+          : mode === "home"
+            ? "Any slot between 6:00 PM and 10:00 PM, or 10 AM – 10 PM at weekends."
+            : "Live one-to-one, booked inside the 6 PM – 10 PM or 10 AM – 10 PM windows.");
       $("#heroResultTag").innerHTML = "Class " + cls + " · " + board + "<small>" + esc(modeName) + " available</small>";
       toast("Matching batch found — see the details below");
       document.querySelector("#fees").scrollIntoView({ behavior: "smooth", block: "start" });
@@ -265,33 +369,17 @@
   }
 
   /* ---------------- 6. fee calculator ---------------- */
-  function renderCalcSubjects() {
-    var box = $("#calcSubjects");
-    box.innerHTML = CFG.subjects.map(function (s) {
-      return '<label><input type="checkbox" value="' + s.id + '" data-name="' + esc(s.name) + '"' +
-        (s.star || ["english", "social"].indexOf(s.id) > -1 ? " checked" : "") + ">" + esc(s.name) +
-        (s.star ? " ★" : "") + "</label>";
-    }).join("");
-  }
-
   function calc() {
     var cls = $("#calcClass").value, mode = $("#calcMode").value, months = Number($("#calcMonths").value);
-    var picked = $$("#calcSubjects input:checked");
     var rate = Number(CFG.fees[mode].bands[cls] || CFG.fees[mode].bands["10"]);
-    var subjects = picked.length || 1;
-    var per = rate * subjects;
-    var disc = subjects >= 2 ? CFG.fees[mode].allSubjectDiscount : 0;
-    var monthly = Math.round(per * (100 - disc) / 100);
+    var monthly = rate;
     var total = monthly * months;
     $("#calcMonthly").textContent = money(monthly);
     $("#calcTotal").textContent = money(total);
-    $("#calcPerClass").textContent = subjects > 1 ? money(Math.round(total / (subjects * months))) : money(monthly);
+    $("#calcPerClass").textContent = money(rate);
     $("#calcMonthsLabel").textContent = months;
-    $("#calcDiscountNote").textContent = subjects >= 2
-      ? "Combined-subject discount of " + disc + "% applied."
-      : "Pick 2 or more subjects for a combined discount of " + CFG.fees[mode].allSubjectDiscount + "%.";
-    return { cls: cls, mode: mode, months: months, monthly: monthly, total: total,
-      subjects: picked.map(function (i) { return i.getAttribute("data-name"); }) };
+    $("#calcDiscountNote").textContent = "Mathematics only · " + CFG.fees[mode].label + " · " + money(rate) + " per month.";
+    return { cls: cls, mode: mode, months: months, monthly: monthly, total: total, rate: rate };
   }
 
   function setCalc(opts) {
@@ -301,19 +389,17 @@
   }
 
   function initCalc() {
-    renderCalcSubjects();
     ["#calcClass", "#calcMode", "#calcMonths"].forEach(function (sel) {
       $(sel).addEventListener("change", calc);
     });
-    $("#calcSubjects").addEventListener("change", calc);
     $("#calcPrint").addEventListener("click", function () { window.print(); });
     $("#printPage").addEventListener("click", function () { window.print(); });
     $("#calcEnquire").addEventListener("click", function () {
       var r = calc();
-      var names = r.subjects.length ? r.subjects.join(", ") : "Mathematics";
+      var modeName = CFG.fees[r.mode].label;
       this.setAttribute("data-wa",
-        "Hi Sir, I used the fee calculator on your website.\nClass " + r.cls + " · " + names +
-        "\nMonthly: " + money(r.monthly) + " · Total for " + r.months + " months: " + money(r.total) +
+        "Hi Sir, I used the fee calculator on your website.\nClass " + r.cls + " · CBSE/ICSE · Mathematics\n" +
+        modeName + ": " + money(r.monthly) + " per month · " + money(r.total) + " for " + r.months + " months" +
         "\nPlease confirm the slot.");
       this.setAttribute("href", waLink(this.getAttribute("data-wa")));
     });
@@ -324,14 +410,15 @@
   function samReply(q) {
     var s = (q || "").toLowerCase();
     var A = CFG.sam.answers;
-    if (/fee|cost|price|charge|₹|rupee|payment|discount/.test(s)) return A.fee;
+    if (/fee|cost|price|charge|₹|rupee|payment/.test(s)) return A.fee;
     if (/time|timing|slot|schedule|when|hour|evening|morning|batch/.test(s)) return A.time;
-    if (/subject|which|syllabus|all subject|book/.test(s)) return A.subjects;
+    if (/syllabus|chapter|curriculum|course|covered|tick/.test(s)) return A.syllabus;
+    if (/area|near|locality|location|located|address|where|place|home tuition in/.test(s)) return A.area;
+    if (/subject|which subject|all subject/.test(s)) return A.subjects;
     if (/demo|free|trial|try/.test(s)) return A.demo;
-    if (/home|visit|door|house|at home|personal|one to one|1-to-1/.test(s)) return A.home;
-    if (/physics/.test(s)) return A.physics;
-    if (/math|mathematic|formula|algebra|geometry|trigonometry/.test(s)) return A.maths;
-    if (/board|cbse|icse|state/.test(s)) return A.boards;
+    if (/home tuition|home tuition fees|visit|door|house|at home|personal|one to one|1-to-1/.test(s)) return A.home;
+    if (/math|mathematic|formula|algebra|geometry|trigonometry|chapter/.test(s)) return A.maths;
+    if (/board|cbse|icse/.test(s)) return A.boards;
     if (/result|progress|mark|test|report|improvement/.test(s)) return A.results;
     if (/call|phone|contact|whatsapp|talk|speak|number/.test(s)) return A.talk;
     return A.default;
@@ -357,6 +444,8 @@
       samPush(esc(text), "me");
       setTimeout(function () { samPush(samReply(text)); }, 340);
     }
+    var samRole = $("#samRole");
+    if (samRole && CFG.sam.full) samRole.textContent = CFG.sam.full;
     $("#samForm").addEventListener("submit", function (e) {
       e.preventDefault();
       var input = $("#samInput");
@@ -475,20 +564,6 @@
     });
   }
 
-  function initFilters() {
-    $$(".chip[data-filter]").forEach(function (chip) {
-      chip.addEventListener("click", function () {
-        $$(".chip[data-filter]").forEach(function (c) { c.classList.remove("active"); });
-        chip.classList.add("active");
-        var f = chip.getAttribute("data-filter");
-        $$("#subjectGrid .subj").forEach(function (card) {
-          var show = f === "all" || card.getAttribute("data-group") === f;
-          card.style.display = show ? "" : "none";
-        });
-      });
-    });
-  }
-
   function initCounters() {
     var els = $$("[data-count]");
     if (!("IntersectionObserver" in window)) {
@@ -530,38 +605,69 @@
   }
 
   /* ---------------- 11. enquiry ---------------- */
-  function initEnquiry() {
-    $("#enquiryForm").addEventListener("submit", function (e) {
-      e.preventDefault();
-      var f = e.target;
-      var get = function (id) { return ($(id).value || "").trim(); };
-      if (!get("#eName")) { $("#eName").focus(); $("#enquiryStatus").textContent = "Please enter the student's name."; return; }
-      var phone = get("#ePhone").replace(/\D/g, "");
-      if (phone.length < 10) { $("#ePhone").focus(); $("#enquiryStatus").textContent = "Please enter a valid 10-digit phone number."; return; }
-      if (!get("#eSubjects")) { $("#eSubjects").focus(); $("#enquiryStatus").textContent = "Please mention at least one subject."; return; }
-
-      var msg = "New tuition enquiry\n" +
+  function enquiryBody() {
+    var get = function (id) { return ($(id).value || "").trim(); };
+    var phone = get("#ePhone").replace(/\D/g, "");
+    return {
+      get: get,
+      phone: phone,
+      subject: get("#eSubjects") || "Mathematics",
+      text:
         "Student: " + get("#eName") + "\n" +
         (get("#eParent") ? "Parent: " + get("#eParent") + "\n" : "") +
         "Class: " + get("#eClass") + " · " + get("#eBoard") + "\n" +
         "Mode: " + get("#eMode") + "\n" +
         "Phone: " + phone + "\n" +
-        "Subjects: " + get("#eSubjects") + "\n" +
+        "Subject: " + (get("#eSubjects") || "Mathematics") + "\n" +
+        (get("#eArea") ? "Area: " + get("#eArea") + "\n" : "") +
         (get("#eTiming") ? "Preferred timing: " + get("#eTiming") + "\n" : "") +
-        (get("#eMsg") ? "Details: " + get("#eMsg") : "");
+        (get("#eMsg") ? "Details: " + get("#eMsg") : ""),
+      line:
+        "Class " + get("#eClass") + " · " + get("#eBoard") + " · " + (get("#eSubjects") || "Mathematics") +
+        " · " + get("#eMode") + " · " + phone
+    };
+  }
+
+  function initEnquiry() {
+    $("#enquiryForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var f = e.target;
+      var d = enquiryBody();
+      var get = d.get;
+      var via = (e.submitter && e.submitter.value) || "whatsapp";
+
+      if (!get("#eName")) { $("#eName").focus(); $("#enquiryStatus").textContent = "Please enter the student's name."; return; }
+      if (d.phone.length < 10) { $("#ePhone").focus(); $("#enquiryStatus").textContent = "Please enter a valid 10-digit phone number."; return; }
 
       try {
         var leads = JSON.parse(localStorage.getItem(LEADS) || "[]");
         leads.push({ at: new Date().toISOString(), name: get("#eName"), parent: get("#eParent"),
-          cls: get("#eClass"), board: get("#eBoard"), mode: get("#eMode"), phone: phone,
-          subjects: get("#eSubjects"), timing: get("#eTiming"), message: get("#eMsg") });
+          cls: get("#eClass"), board: get("#eBoard"), mode: get("#eMode"), phone: d.phone,
+          subjects: d.subject, area: get("#eArea"), timing: get("#eTiming"), message: get("#eMsg"), via: via });
         localStorage.setItem(LEADS, JSON.stringify(leads));
       } catch (err) { /* storage may be blocked */ }
 
-      window.open(waLink(msg), "_blank", "noopener");
-      $("#enquiryStatus").textContent = "Opening WhatsApp with your details — press send and we will call you back.";
-      toast("Enquiry sent to WhatsApp");
+      var opened = [];
+      if (via === "whatsapp" || via === "both") {
+        window.open(waLink("New tuition enquiry\n" + d.text), "_blank", "noopener");
+        opened.push("WhatsApp");
+      }
+      if (via === "email" || via === "both") {
+        window.location.href = "mailto:" + CFG.contact.email +
+          "?subject=" + encodeURIComponent("New Mathematics tuition enquiry — " + get("#eName")) +
+          "&body=" + encodeURIComponent("New tuition enquiry (from the website)\n\n" + d.text);
+        opened.push("email");
+      }
+
+      var status = via === "both"
+        ? "Opening WhatsApp and your email app so the tutor is notified on both."
+        : via === "email"
+          ? "Opening your email app with the details. Press send — the slot is confirmed on WhatsApp."
+          : "Opening WhatsApp with your details — press send and the slot is confirmed within a few hours.";
+      $("#enquiryStatus").textContent = status;
+      toast("Enquiry ready on " + opened.join(" + "));
       f.reset();
+      $("#eSubjects").value = CFG.subjects[0].name;
     });
   }
 
@@ -600,7 +706,6 @@
 
     function fillAdmin() {
       $("#aPhone").value = CFG.contact.phonePrimaryDisplay;
-      $("#aPhoneAlt").value = CFG.contact.phoneAltDisplay;
       $("#aWa").value = CFG.contact.whatsapp;
       $("#aEmail").value = CFG.contact.email;
       $("#aArea").value = CFG.brand.areaLine;
@@ -615,22 +720,16 @@
     function refreshAll() {
       bindAll();
       renderFeeCards();
-      renderCalcSubjects();
       calc();
       document.dispatchEvent(new Event("srt:rerendered"));
     }
 
     $("#saveContact").addEventListener("click", function () {
       var p1 = ($("#aPhone").value || "").replace(/\D/g, "");
-      var p2 = ($("#aPhoneAlt").value || "").replace(/\D/g, "");
       var wa = ($("#aWa").value || "").replace(/\D/g, "");
       if (p1.length >= 10) {
         CFG.contact.phonePrimary = p1.slice(-10);
         CFG.contact.phonePrimaryDisplay = $("#aPhone").value.trim();
-      }
-      if (p2.length >= 10) {
-        CFG.contact.phoneAlt = p2.slice(-10);
-        CFG.contact.phoneAltDisplay = $("#aPhoneAlt").value.trim();
       }
       if (wa.length >= 10) CFG.contact.whatsapp = wa.replace(/^0+/, "");
       if ($("#aEmail").value.trim()) CFG.contact.email = $("#aEmail").value.trim();
@@ -680,6 +779,16 @@
       toast("Enquiry list cleared");
     });
 
+    $("#clearSyllabus").addEventListener("click", function () {
+      saveDone([]);
+      $$("#syllabusPanels input[data-syll-key]").forEach(function (b) {
+        b.checked = false;
+        b.closest(".chap").classList.remove("done");
+      });
+      updateSyllabusTotals();
+      toast("Syllabus ticks cleared");
+    });
+
     function getLeads() { try { return JSON.parse(localStorage.getItem(LEADS) || "[]"); } catch (e) { return []; } }
     function refreshLeads() {
       var leads = getLeads();
@@ -699,6 +808,7 @@
     bindAll();
     renderMarquee();
     renderFormulaLab();
+    renderSyllabus();
     renderMethod();
     renderSchedule();
     renderTutor();
@@ -715,7 +825,6 @@
     initReviews();
     initTabs();
     initAcc();
-    initFilters();
     initCounters();
     initReveal();
     initEnquiry();
