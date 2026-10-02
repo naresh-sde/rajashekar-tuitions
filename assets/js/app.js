@@ -84,7 +84,7 @@
       var t = a.getAttribute("data-tel") || (a.getAttribute("href").indexOf(String(pa).slice(-10)) > -1 ? pa : p);
       a.setAttribute("href", telHref(t));
     });
-    $$(".wa-link").forEach(function (a) {
+    $$("[data-wa]").forEach(function (a) {
       a.setAttribute("href", waLink(a.getAttribute("data-wa")));
       a.setAttribute("target", "_blank");
       a.setAttribute("rel", "noopener");
@@ -134,10 +134,10 @@
       fab.classList.toggle("show", window.scrollY > 700);
     }, { passive: true });
 
-    $$("a[href^='#']").forEach(function (a) {
+    $$("a[href^='#']:not([data-wa])").forEach(function (a) {
       a.addEventListener("click", function (e) {
-        var id = a.getAttribute("href");
-        if (id.length < 2) return;
+        var id = a.getAttribute("href") || "";
+        if (id.charAt(0) !== "#" || id.length < 2) return;
         var t = document.querySelector(id);
         if (!t) return;
         e.preventDefault();
