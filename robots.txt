@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /404.html
+
+Sitemap: https://naresh-sde.github.io/rajashekar-tuitions/sitemap.xml

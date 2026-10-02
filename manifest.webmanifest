@@ -1,0 +1,17 @@
+{
+  "name": "Rajashekar Tuitions — Classes 6 to 10, Hyderabad",
+  "short_name": "Rajashekar Tuitions",
+  "description": "Maths & Physics tuition for Classes 6 to 10 in Hyderabad — CBSE, ICSE and State Board. Classroom, home tuition and live online.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f7f7fc",
+  "theme_color": "#4f46e5",
+  "lang": "en-IN",
+  "categories": ["education"],
+  "icons": [
+    { "src": "assets/img/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "assets/img/logo.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}

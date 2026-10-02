@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Weekly test, report card and study material">
+  <defs>
+    <linearGradient id="r1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#34d399"/><stop offset="1" stop-color="#0ea5e9"/></linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="24" fill="#eefaf4"/>
+  <circle cx="336" cy="240" r="86" fill="#10b981" opacity=".1"/>
+  <rect x="34" y="40" width="200" height="220" rx="16" fill="#ffffff" stroke="#cde8dd" stroke-width="3"/>
+  <rect x="34" y="40" width="200" height="46" rx="16" fill="url(#r1)"/>
+  <text x="56" y="70" font-family="Segoe UI, Arial" font-size="17" font-weight="700" fill="#ffffff">Weekly Test</text>
+  <g font-family="Segoe UI, Arial" font-size="14" fill="#2b3160">
+    <text x="54" y="118">Maths</text><text x="200" y="118" text-anchor="end" fill="#0f766e" font-weight="700">92%</text>
+    <text x="54" y="150">Physics</text><text x="200" y="150" text-anchor="end" fill="#0f766e" font-weight="700">88%</text>
+    <text x="54" y="182">English</text><text x="200" y="182" text-anchor="end" fill="#b45309" font-weight="700">71%</text>
+    <text x="54" y="214">Social Sci</text><text x="200" y="214" text-anchor="end" fill="#b45309" font-weight="700">76%</text>
+  </g>
+  <g stroke="#e3f1ec" stroke-width="6" stroke-linecap="round">
+    <path d="M54 128h146M54 160h146M54 192h146M54 224h146"/>
+  </g>
+  <g>
+    <rect x="252" y="86" width="118" height="40" rx="10" fill="#ffffff"/>
+    <rect x="268" y="100" width="86" height="9" rx="4.5" fill="#cde8dd"/>
+    <rect x="252" y="138" width="118" height="40" rx="10" fill="#ffffff"/>
+    <rect x="268" y="152" width="66" height="9" rx="4.5" fill="#cde8dd"/>
+  </g>
+  <circle cx="300" cy="230" r="42" fill="#ffffff" stroke="#10b981" stroke-width="6"/>
+  <path d="M280 232l14 14 28-32" fill="none" stroke="#10b981" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

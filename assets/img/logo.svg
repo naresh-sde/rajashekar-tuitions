@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Rajashekar Tuitions logo">
+  <defs>
+    <linearGradient id="lgA" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7c5cff"/>
+      <stop offset="1" stop-color="#4f46e5"/>
+    </linearGradient>
+    <linearGradient id="lgB" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffd166"/>
+      <stop offset="1" stop-color="#f59e0b"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="18" fill="url(#lgA)"/>
+  <circle cx="52" cy="13" r="12" fill="#ffffff" opacity=".14"/>
+  <path d="M13 25.5 32 16l19 9.5L32 35z" fill="url(#lgB)"/>
+  <path d="M19 30v11.5c0 4.6 5.8 8 13 8s13-3.4 13-8V30l-13 6.6z" fill="#ffffff" opacity=".95"/>
+  <path d="M47 28.5v10" stroke="#ffd166" stroke-width="2.6" stroke-linecap="round"/>
+  <circle cx="47" cy="41" r="2.6" fill="#ffd166"/>
+  <path d="M25.5 40.5l3.6 3.6 7.4-7.6" fill="none" stroke="#4f46e5" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

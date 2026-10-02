@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 620" role="img" aria-label="Tutor teaching mathematics on a board to a small class of students">
+  <defs>
+    <linearGradient id="h1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7c5cff"/><stop offset="1" stop-color="#4f46e5"/>
+    </linearGradient>
+    <linearGradient id="h2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#eef1ff"/>
+    </linearGradient>
+    <linearGradient id="h3" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffd166"/><stop offset="1" stop-color="#f59e0b"/>
+    </linearGradient>
+    <linearGradient id="h4" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#34d399"/><stop offset="1" stop-color="#10b981"/>
+    </linearGradient>
+  </defs>
+
+  <circle cx="600" cy="96" r="150" fill="#7c5cff" opacity=".08"/>
+  <circle cx="90" cy="520" r="170" fill="#f59e0b" opacity=".09"/>
+  <circle cx="140" cy="120" r="60" fill="#34d399" opacity=".12"/>
+
+  <!-- board -->
+  <rect x="228" y="52" width="430" height="268" rx="22" fill="url(#h2)" stroke="#c7cdf5" stroke-width="3"/>
+  <rect x="248" y="72" width="390" height="60" rx="14" fill="url(#h1)"/>
+  <text x="268" y="111" font-family="Segoe UI, Arial" font-size="27" font-weight="700" fill="#ffffff">CLASS 10 · MATHS</text>
+  <g font-family="Consolas, monospace" font-size="25" fill="#2b3160">
+    <text x="262" y="176">x² − 5x + 6 = 0</text>
+    <text x="262" y="214">(x − 2)(x − 3) = 0</text>
+    <text x="262" y="252">x = 2, 3</text>
+  </g>
+  <g stroke="#4f46e5" stroke-width="4" fill="none" stroke-linecap="round">
+    <path d="M470 232h96"/><path d="M470 252h60"/>
+    <path d="M598 214l18 18-18 18"/>
+  </g>
+  <rect x="248" y="282" width="150" height="12" rx="6" fill="#ffd166"/>
+  <rect x="410" y="282" width="90" height="12" rx="6" fill="#34d399" opacity=".7"/>
+  <rect x="228" y="320" width="430" height="14" rx="7" fill="#b9c0ea"/>
+
+  <!-- teacher -->
+  <g>
+    <path d="M120 246c34-40 84-52 118-30 26 17 34 54 22 88l-46 20-70-26z" fill="#3b3358"/>
+    <circle cx="176" cy="252" r="42" fill="#f0b892"/>
+    <path d="M136 244c2-38 26-58 56-54 24 3 40 20 42 44-16-8-30-20-38-32-14 20-34 34-60 42z" fill="#241f38"/>
+    <circle cx="162" cy="256" r="4.4" fill="#241f38"/><circle cx="190" cy="256" r="4.4" fill="#241f38"/>
+    <path d="M164 278c7 6 17 6 24 0" stroke="#241f38" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+    <path d="M112 300h128l16 122H96z" fill="url(#h1)"/>
+    <path d="M112 300h128l4 30H108z" fill="#ffffff" opacity=".9"/>
+    <path d="M108 330 74 386" stroke="url(#h1)" stroke-width="22" stroke-linecap="round"/>
+    <path d="M240 330l58 24" stroke="url(#h1)" stroke-width="22" stroke-linecap="round"/>
+    <circle cx="302" cy="356" r="11" fill="#f0b892"/>
+    <path d="M96 422h152l-12 118H108z" fill="#2b3160"/>
+  </g>
+
+  <!-- students -->
+  <g>
+    <g transform="translate(292,0)">
+      <circle cx="60" cy="322" r="30" fill="#c98b62"/>
+      <path d="M30 316c4-30 22-42 44-38 16 3 26 15 26 30-16-6-30-14-38-22-8 12-18 22-32 30z" fill="#1f1b33"/>
+      <circle cx="50" cy="326" r="3.4" fill="#1f1b33"/><circle cx="72" cy="326" r="3.4" fill="#1f1b33"/>
+      <path d="M22 362h76l10 78H12z" fill="url(#h4)"/>
+      <path d="M22 396h76v18H22z" fill="#ffffff" opacity=".55"/>
+    </g>
+    <g transform="translate(452,0)">
+      <circle cx="60" cy="334" r="28" fill="#e5b58c"/>
+      <path d="M32 330c2-28 20-42 42-40 18 2 30 16 30 32-14-4-26-12-34-22-8 14-20 24-38 30z" fill="#2b2118"/>
+      <circle cx="51" cy="338" r="3.2" fill="#2b2118"/><circle cx="72" cy="338" r="3.2" fill="#2b2118"/>
+      <path d="M24 372h72l10 70H14z" fill="#ffd166"/>
+      <path d="M24 404h72v16H24z" fill="#ffffff" opacity=".6"/>
+    </g>
+  </g>
+
+  <!-- desk + books -->
+  <rect x="256" y="452" width="404" height="20" rx="10" fill="#b9c0ea"/>
+  <rect x="286" y="472" width="18" height="76" rx="8" fill="#8f97d6"/>
+  <rect x="612" y="472" width="18" height="76" rx="8" fill="#8f97d6"/>
+  <rect x="300" y="424" width="72" height="26" rx="6" fill="#4f46e5"/>
+  <rect x="300" y="412" width="72" height="16" rx="6" fill="#7c5cff"/>
+  <rect x="382" y="424" width="66" height="26" rx="6" fill="#f59e0b"/>
+  <rect x="382" y="414" width="66" height="14" rx="6" fill="#ffd166"/>
+
+  <!-- floating math glyphs -->
+  <g font-family="Segoe UI, Arial" font-weight="800" font-size="34" fill="#4f46e5" opacity=".55">
+    <text x="60" y="300">π</text>
+    <text x="620" y="404">∑</text>
+    <text x="90" y="150" font-size="26">√</text>
+    <text x="626" y="150" font-size="30" fill="#f59e0b">θ</text>
+    <text x="20" y="440" font-size="28" fill="#10b981">F = ma</text>
+  </g>
+</svg>

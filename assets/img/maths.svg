@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Whiteboard with quadratic equation steps">
+  <defs>
+    <linearGradient id="m1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7c5cff"/><stop offset="1" stop-color="#4f46e5"/></linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="24" fill="#eef1ff"/>
+  <circle cx="340" cy="52" r="76" fill="#4f46e5" opacity=".1"/>
+  <rect x="28" y="34" width="344" height="188" rx="16" fill="#ffffff" stroke="#c7cdf5" stroke-width="3"/>
+  <rect x="44" y="50" width="150" height="26" rx="8" fill="url(#m1)"/>
+  <text x="60" y="69" font-family="Segoe UI, Arial" font-size="14" font-weight="700" fill="#ffffff">MATHS · FORMULA</text>
+  <g font-family="Consolas, monospace" font-size="18" fill="#2b3160">
+    <text x="46" y="104">ax² + bx + c = 0</text>
+    <text x="46" y="134">D = b² − 4ac</text>
+    <text x="46" y="164">x = (−b ± √D) / 2a</text>
+    <text x="46" y="194">if D = 0 → equal roots</text>
+  </g>
+  <path d="M262 118h72" stroke="#ffd166" stroke-width="6" stroke-linecap="round"/>
+  <path d="M312 100l18 18-18 18" fill="none" stroke="#ffd166" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="252" y="164" width="96" height="30" rx="10" fill="#34d399" opacity=".18"/>
+  <text x="266" y="185" font-family="Segoe UI, Arial" font-size="15" font-weight="700" fill="#0f766e">Step-wise</text>
+  <rect x="40" y="236" width="120" height="12" rx="6" fill="#4f46e5" opacity=".5"/>
+  <rect x="172" y="236" width="90" height="12" rx="6" fill="#ffd166"/>
+  <rect x="274" y="236" width="70" height="12" rx="6" fill="#34d399" opacity=".6"/>
+  <g font-family="Segoe UI, Arial" font-weight="800" font-size="30" fill="#4f46e5" opacity=".45">
+    <text x="30" y="290">√</text>
+  </g>
+</svg>

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Progress graph showing marks improving over months">
+  <defs>
+    <linearGradient id="p1" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffd166"/><stop offset="1" stop-color="#f59e0b"/></linearGradient>
+    <linearGradient id="p2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7c5cff" stop-opacity=".35"/><stop offset="1" stop-color="#7c5cff" stop-opacity="0"/></linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="24" fill="#f4f2ff"/>
+  <g stroke="#dcd9f5" stroke-width="2">
+    <path d="M52 60h312M52 110h312M52 160h312M52 210h312M52 250h312"/>
+  </g>
+  <path d="M60 232 130 206 200 170 270 118 340 78v182H60z" fill="url(#p2)"/>
+  <path d="M60 232 130 206 200 170 270 118 340 78" fill="none" stroke="url(#p1)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <g fill="#ffffff" stroke="#f59e0b" stroke-width="5">
+    <circle cx="60" cy="232" r="9"/><circle cx="130" cy="206" r="9"/><circle cx="200" cy="170" r="9"/><circle cx="270" cy="118" r="9"/><circle cx="340" cy="78" r="9"/>
+  </g>
+  <g font-family="Segoe UI, Arial" font-weight="700" font-size="16" fill="#2b3160">
+    <text x="44" y="276">Apr</text><text x="114" y="276">Jun</text><text x="184" y="276">Aug</text><text x="252" y="276">Oct</text><text x="322" y="276">Dec</text>
+  </g>
+  <g font-family="Segoe UI, Arial" font-weight="800" font-size="18" fill="#4f46e5">
+    <text x="286" y="66">+38%</text>
+  </g>
+  <circle cx="340" cy="78" r="22" fill="#f59e0b" opacity=".12"/>
+  <g transform="translate(56,80)">
+    <rect width="104" height="34" rx="10" fill="#ffffff" stroke="#c7cdf5" stroke-width="2"/>
+    <text x="16" y="23" font-family="Segoe UI, Arial" font-weight="700" font-size="15" fill="#2b3160">Weak areas</text>
+  </g>
+</svg>
