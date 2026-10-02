@@ -1,7 +1,7 @@
 {
-  "name": "Rajashekar Tuitions — Classes 6 to 10, Hyderabad",
-  "short_name": "Rajashekar Tuitions",
-  "description": "Maths & Physics tuition for Classes 6 to 10 in Hyderabad — CBSE, ICSE and State Board. Classroom, home tuition and live online.",
+  "name": "MathSaathi — Maths, Physics & Chemistry Tuition, Hyderabad",
+  "short_name": "MathSaathi",
+  "description": "Mathematics, Physics and Chemistry (MPC) tuition for Classes 6 to 10 in Pragathinagar, Hyderabad — CBSE and ICSE. Classroom, home tuition and live online one-to-one, with a class-wise syllabus tracker and sample tests with solutions.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
